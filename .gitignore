@@ -1,0 +1,19 @@
+# Exclude WhatsApp database
+wacli.db
+
+# Exclude local memory database
+memory.db
+
+# Exclude Python bytecode
+__pycache__/
+*.pyc
+
+# Exclude wacli binary
+wacli.exe
+wacli
+
+# Logs
+*.log
+
+# ComfyUI outputs
+output/
