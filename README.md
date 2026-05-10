@@ -1,44 +1,65 @@
-# WhatsApp AI Bot (with Gemini & ComfyUI)
+# 🤖 WhatsApp AI Clone & Image Generator
 
-A complete end-to-end tutorial and setup for creating an AI-powered WhatsApp Bot. This bot integrates Google's Gemini AI for smart, conversational replies, and ComfyUI (Stable Diffusion) to generate and send images directly to WhatsApp!
+Have you ever been completely flooded with WhatsApp messages while you were busy, asleep, or just not in the mood to reply? 
 
-## Features 🚀
-- **AI Chatbot**: Uses Google's Gemini Models for fast and smart replies.
-- **Image Generation**: Generates images locally using ComfyUI (triggered via `@imagine <prompt>`).
-- **Memory System**: Remembers user facts in a local SQLite database.
-- **Cross-Platform**: Run on Windows (via Batch) or Android (via Termux).
-- **API Rotation**: Built-in API key rotation to handle rate-limiting.
+I built this project so you can have your very own **AI Clone** running in the background. It reads your WhatsApp messages, figures out what the person is saying, and replies to them beautifully and politely—just like a human would! 
 
-## Prerequisites 🛠️
-1. [Python 3.10+](https://www.python.org/downloads/) installed.
-2. [WACLI (WhatsApp CLI)](https://github.com/openclaw/wacli) - You'll need the executable.
-3. [ComfyUI](https://github.com/comfyanonymous/ComfyUI) (Optional) - Required only if you want image generation features.
+Oh, and if someone types `@imagine a cute cat wearing sunglasses`, the bot will literally generate that image on your PC and send it to them right inside WhatsApp. It’s basically magic. ✨
 
-## Setup Instructions (Windows) 💻
+---
 
-1. **Clone this repository** (or download as ZIP).
-2. **Download WACLI**: Download `wacli.exe` from their GitHub and place it in the same directory as the scripts.
-3. **Configure the Bot**:
-   - Open `server_windows.py`.
-   - Replace the `API_KEYS` list with your actual Google Gemini API keys.
-   - Update the `COMFY_OUTPUT_DIR` to point to your ComfyUI output folder.
-4. **Link WACLI**: Open a terminal, run `./wacli.exe auth` and scan the QR code with your WhatsApp.
-5. **Run**: Simply double-click `start_bot.bat`. It will automatically install dependencies, start the webhook server, and begin listening for messages!
+## 🌟 What can this Bot actually do?
 
-## Setup Instructions (Android / Termux) 📱
-If you want the bot to run 24/7 on an old Android phone using Termux:
+- 💬 **Talk for you when you're offline:** If a friend messages you at 3 AM, the bot will chat with them naturally, in Hindi or English, and keep them entertained.
+- 🧠 **It has a Memory!** If your friend says "I love coffee", the bot remembers that fact and stores it in a local database. Later, it might bring it up in conversation!
+- 🎨 **Sends AI Images (ComfyUI):** It connects directly to your PC's GPU. If someone sends `@imagine [anything]`, your PC will generate a stunning AI image and the bot will send it directly to their WhatsApp chat!
+- 🔄 **Smart API Rotation:** Free AI APIs (like Gemini) have limits. This bot is smart enough to juggle multiple API keys so it never stops working.
+- 📱 **Runs 24/7 on an old phone:** You don't need to leave your PC on forever. I've included a script to run this 24/7 on an old Android phone using Termux!
 
-1. Install Termux and open it.
-2. Upload `termux_setup.sh` to your phone or curl it directly.
-3. Run the setup: `bash termux_setup.sh`.
-4. It will install Python, download the ARM64 WACLI, and set up an auto-start script in your `.bashrc`.
-5. Run `cd ~/wacli && ./wacli auth` to link your WhatsApp.
+---
 
-## How it Works 🧠
-- `wacli sync --follow` listens to incoming WhatsApp messages and forwards them to a local webhook.
-- `server_windows.py` receives the webhook (`POST /webhook`), parses the text, and checks if it's a command (`@imagine`) or normal text.
-- If normal text, it extracts facts using a background thread and asks Gemini for a reply.
-- If `@imagine`, it spins up the ComfyUI process (in CPU/Split memory mode to save RAM), triggers the workflow via API, waits for the image, sends the image to WhatsApp using WACLI, and then kills ComfyUI to free memory.
+## 🛠️ Step-by-Step Setup Guide
 
-## Disclaimer ⚠️
-Do **NOT** share your API keys or `memory.db` file. Add them to your `.gitignore` before pushing to any public repository.
+I promise this is easier than it looks. Just follow these steps:
+
+### Step 1: Download WACLI (The WhatsApp Connector)
+WACLI is a tool that lets our Python code talk to WhatsApp.
+1. Go to the [WACLI GitHub Page](https://github.com/openclaw/wacli) and download the `wacli.exe` file for Windows.
+2. Put `wacli.exe` inside the exact same folder as these downloaded scripts.
+3. Open a terminal in that folder and type `./wacli.exe auth`. A QR code will pop up. Scan it with your WhatsApp (Linked Devices) just like WhatsApp Web!
+
+### Step 2: Get Google's Gemini AI Brain
+The bot needs a brain, and we are using Google's amazing Gemini (which is free!).
+1. Go to [Google AI Studio](https://aistudio.google.com/) and create some API Keys.
+2. Open `server_windows.py` in Notepad or VS Code.
+3. Find the `API_KEYS = [...]` section at the top. Paste your keys there.
+
+### Step 3: Run the Bot!
+1. Double-click the `start_bot.bat` file. 
+2. It will automatically install everything it needs (like Flask).
+3. Two black windows will pop up: One is the WACLI syncing your messages, and the other is your AI Brain processing them.
+4. **Boom!** Have a friend send you a message. The bot will instantly reply!
+
+---
+
+## 🎨 (Optional) Step 4: The Image Generator Setup
+Want the `@imagine` command to work? You need ComfyUI installed on your PC.
+1. Download [ComfyUI](https://github.com/comfyanonymous/ComfyUI).
+2. Open `server_windows.py` and look for `COMFY_OUTPUT_DIR`. Change it to wherever your ComfyUI saves images (e.g., `C:\ComfyUI\output`).
+3. Now, whenever someone texts you `@imagine an astronaut on mars`, your PC will generate it and send it!
+
+---
+
+## 📱 How to Run it 24/7 on an Old Android Phone
+Don't want to keep your PC on all night? No problem. You can run the text-chat part of this bot 24/7 on any old Android phone.
+
+1. Download **Termux** from F-Droid (don't use the Play Store version) on your Android phone.
+2. Transfer the `termux_setup.sh` script and `server_windows.py` to your phone.
+3. Open Termux and run: `bash termux_setup.sh`
+4. The script will literally install Python, download the Linux version of WACLI, setup auto-start, and link everything together.
+5. Scan the QR code, and you now have a permanent 24/7 WhatsApp AI Server in your pocket!
+
+---
+
+### ⚠️ A Tiny Warning
+Never share your API keys with anyone, and don't upload your `memory.db` file to the internet, because it contains facts about your friends! (I've added a `.gitignore` file to prevent this automatically, but just be careful). Enjoy your new AI clone!
